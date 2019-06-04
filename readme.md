@@ -5,4 +5,4 @@ To manage App Setup, visit:
 http://partners.shopify.com
 
 Where we left off: 
-https://developers.shopify.com/tutorials/build-a-shopify-app-with-node-and-react/build-your-user-interface-with-polaris#add-the-resource-picker
+https://developers.shopify.com/tutorials/build-a-shopify-app-with-node-and-react/fetch-data-with-apollo#configure-apollo-client
