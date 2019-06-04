@@ -1,4 +1,7 @@
-import { EmptyState, Layout, Page, TextStyle, ResourcePicker } from '@shopify/polaris';
+import { EmptyState, Layout, Page, ResourcePicker } from '@shopify/polaris';
+import store from 'store-js';
+import ResourceListWithProducts from '../components/ResourceList';
+
 const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 class Resources extends React.Component {
@@ -30,13 +33,14 @@ class Resources extends React.Component {
             <p>Select products and change their price temporarily</p>
           </EmptyState>
         </Layout>
-      </Page>
+        <ResourceListWithProducts />
+      </Page >
     );
   }
   handleSelection = (resources) => {
     const idsFromResources = resources.selection.map((product) => product.id);
-    this.setState({ open: false })
-    console.log(resources)
+    this.setState({ open: false });
+    store.set('ids', idsFromResources);
   };
 }
 
