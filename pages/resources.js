@@ -6,7 +6,9 @@ const img = 'https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg';
 
 class Resources extends React.Component {
   state = { open: false };
+
   render() {
+    const emptyState = !store.get('ids');
     return (
       <Page
         primaryAction={{
@@ -21,20 +23,23 @@ class Resources extends React.Component {
           onSelection={(resources) => this.handleSelection(resources)}
           onCancel={() => this.setState({ open: false })}
         />
-        <Layout>
-          <EmptyState
-            heading="Select products to start"
-            action={{
-              content: 'Select products',
-              onAction: () => this.setState({ open: true }),
-            }}
-            image={img}
-          >
-            <p>Select products and change their price temporarily</p>
-          </EmptyState>
-        </Layout>
-        <ResourceListWithProducts />
-      </Page >
+        {emptyState ? (
+          <Layout>
+            <EmptyState
+              heading="Select products to start"
+              action={{
+                content: 'Select products',
+                onAction: () => this.setState({ open: true }),
+              }}
+              image={img}
+            >
+              <p>Select products and change their price temporarily</p>
+            </EmptyState>
+          </Layout>
+        ) : (
+            <ResourceListWithProducts />
+        )}
+      </Page>
     );
   }
   handleSelection = (resources) => {
