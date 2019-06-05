@@ -1,23 +1,52 @@
-// GET /admin/api/2019-04/script_tags.json
-
-import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
 import {
+  Page,
   Card,
+  Form,
+  Layout,
+  FormLayout,
+  TextField,
+  Button,
   ResourceList,
-  Stack,
   TextStyle,
-  Thumbnail,
 } from '@shopify/polaris';
 import store from 'store-js'
 import { TUNNEL_URL } from "../env.json";
 
 class ScriptPage extends React.Component {
+  state = {}
   render() {
-    this.makeRequest();
-    return <h1>This is the scripts page</h1>
+    return (
+      <Page>
+          <Card
+            sectioned 
+            title="Script Tags"
+            actions={[{content: 'Refresh', onAction: this.refreshScripts}]}
+          >
+            <p>View Script Tags that are enqueued in your online store.</p>
+          </Card>
+
+          <Card sectioned>
+            <Form
+              onSubmit={this.addScript}
+              name="Add Script"
+            >
+              <FormLayout>
+                <TextField
+                  label="Source"
+                  helpText="The URL of the script tag you'd like to add"
+                  onChange={(value) => this.setState({value})}
+                />
+                <Button submit>Add</Button>
+                </FormLayout>
+            </Form>
+          </Card>
+      </Page>
+    )
   }
-  async makeRequest() {
+  async addScript(event) {
+    console.log(event)
+  }
+  async refreshScripts() {
     const endpoint = `${TUNNEL_URL}/get-scripts`;
     const response = await fetch(endpoint);
     const body = await response.text();
