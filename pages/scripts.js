@@ -24,6 +24,7 @@ class ScriptPage extends React.Component {
 
     this.renderScriptsTable = this.renderScriptsTable.bind(this);
     this.addScript = this.addScript.bind(this);
+    this.deleteScript = this.deleteScript.bind(this);
     this.refreshScripts = this.refreshScripts.bind(this);
   }
 
@@ -32,7 +33,16 @@ class ScriptPage extends React.Component {
       return [
         s.id, 
         <Link url={s.src}>{s.src}</Link>,
-        s.event
+        s.event,
+        <Button
+          destructive
+          size="slim"
+          onClick={() => {
+            this.deleteScript(s.id);
+          }}
+        >
+          Delete
+        </Button>
       ]
     });
       
@@ -42,11 +52,13 @@ class ScriptPage extends React.Component {
           'text',
           'text',
           'text',
+          'text',
         ]}
         headings = {[
           'id',
           'src',
           'event',
+          'actions',
         ]}
         rows = { rows }
       />
@@ -89,6 +101,16 @@ class ScriptPage extends React.Component {
     const response = await fetch(endpoint);
     const json = await response.json();
     if (json) this.refreshScripts();
+  }
+  async deleteScript(id) {
+    const endpoint = `${TUNNEL_URL}/script_tags`;
+    const response = await fetch(endpoint, {
+      method: 'DELETE',
+      body: { id }
+    });
+
+    const { success } = await response.json();
+    if (success) this.refreshScripts();
   }
   async refreshScripts() {
     const endpoint = `${TUNNEL_URL}/get-scripts`;

@@ -6,6 +6,7 @@ const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, API_VERSION, TUNNEL_URL } = req
  */
 require('isomorphic-fetch');
 const Koa = require('koa');
+const  bodyParser = require('koa-bodyparser');
 const next = require('next');
 const { default: createShopifyAuth } = require('@shopify/koa-shopify-auth');
 const { verifyRequest } = require('@shopify/koa-shopify-auth');
@@ -57,6 +58,25 @@ async function POST_script_tags(ctx) {
   return ctx.body = text;
 }
 
+async function DELETE_script_tags(ctx) {
+  const { id } = ctx.params;
+  if (!id) {
+    ctx.statusCode = 400;
+    return ctx.body = 'Invalid Request';
+  }
+
+  const endpoint = `https://${ctx.session.shop}/admin/api/${API_VERSION}/script_tags/${id}.json`;
+  const response = await fetch(endpoint, {
+    ...fetchOptions(ctx),
+    method: 'DELETE',
+  });
+  
+  if (response.ok) {
+    return ctx.body = { success: true };
+  }
+  return ctx.body = { success: false };
+}
+
 /**
  * Serve static files
  * @param {*} path 
@@ -72,9 +92,12 @@ app.prepare().then(() => {
   const server = new Koa();
   const router = new Router();
 
+  router.get('/script_tags/delete/:id', DELETE_script_tags)
+
   // Authentication
   server.keys = [SHOPIFY_API_SECRET_KEY];
   server.use(session(server));
+  server.use(bodyParser());
   server.use(router.routes());
   server.use(require('koa-static')(__dirname + '/static'));
   server.use(
