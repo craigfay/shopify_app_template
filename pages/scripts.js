@@ -8,21 +8,62 @@ import {
   Button,
   ResourceList,
   TextStyle,
+  DataTable,
+  Link,
 } from '@shopify/polaris';
-import store from 'store-js'
+
 import { TUNNEL_URL } from "../env.json";
 
 class ScriptPage extends React.Component {
-  state = {}
+
+  constructor() {
+    super();
+    this.state = {
+      script_tags: [],
+    }
+
+    this.renderScriptsTable = this.renderScriptsTable.bind(this);
+    this.addScript = this.addScript.bind(this);
+    this.refreshScripts = this.refreshScripts.bind(this);
+  }
+
+  renderScriptsTable() {
+    const rows = this.state.script_tags.map(s => {
+      return [
+        s.id, 
+        <Link url={s.src}>{s.src}</Link>,
+        s.event
+      ]
+    });
+      
+    return (
+      <DataTable
+        columnContentTypes = {[
+          'text',
+          'text',
+          'text',
+        ]}
+        headings = {[
+          'id',
+          'src',
+          'event',
+        ]}
+        rows = { rows }
+      />
+    )
+  }
+
   render() {
     return (
       <Page>
           <Card
-            sectioned 
+            sectioned script_tags
             title="Script Tags"
             actions={[{content: 'Refresh', onAction: this.refreshScripts}]}
           >
             <p>View Script Tags that are enqueued in your online store.</p>
+            { this.renderScriptsTable() }
+            {/* { this.state.script_tags.map((s, i) => <p key={i}>{JSON.stringify(s)}</p>) } */}
           </Card>
 
           <Card sectioned>
@@ -44,13 +85,16 @@ class ScriptPage extends React.Component {
     )
   }
   async addScript(event) {
-    console.log(event)
+    const endpoint = `${TUNNEL_URL}/post-scripts`;
+    const response = await fetch(endpoint);
+    const json = await response.json();
+    if (json) this.refreshScripts();
   }
   async refreshScripts() {
     const endpoint = `${TUNNEL_URL}/get-scripts`;
     const response = await fetch(endpoint);
-    const body = await response.text();
-    console.log(body);
+    const { script_tags } = await response.json();
+    this.setState({ script_tags })
   }
 }
 
