@@ -39,8 +39,20 @@ async function GET_script_tags(ctx) {
 }
 
 async function POST_script_tags(ctx) {
+  const json = JSON.stringify({
+    script_tag: {
+      event: 'onload',
+      src: `${TUNNEL_URL}/static/a.js`
+    }
+  });
+  
   const endpoint = `https://${ctx.session.shop}/admin/api/${API_VERSION}/script_tags.json`;
-  const response = await fetch(endpoint, { method: 'POST', ...fetchOptions(ctx) });
+  const response = await fetch(endpoint, {
+    ...fetchOptions(ctx),
+    method: 'POST',
+    body: json,
+  });
+  
   const text = await response.text();
   return ctx.body = text;
 }
@@ -88,6 +100,8 @@ app.prepare().then(() => {
   server.use(graphQLProxy({version: ApiVersion.April19}))
   server.use(verifyRequest());
   server.use(async (ctx) => {
+
+    // This switch is functioning as a rudimentary router
     switch(ctx.url) {
       case '/get-scripts': return GET_script_tags(ctx);
       case '/post-scripts': return POST_script_tags(ctx);
