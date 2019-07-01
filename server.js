@@ -44,7 +44,7 @@ async function POST_script_tags(ctx) {
   const json = JSON.stringify({
     script_tag: {
       event: 'onload',
-      src: `${TUNNEL_URL}/static/a.js`
+      src: `${ip.address()}/static/a.js`
     }
   });
   
@@ -139,6 +139,6 @@ app.prepare().then(() => {
   });
 
   server.listen(port, () => {
-    console.log(`> Ready on http://localhost:${port}`);
+    console.log(`> Ready on ${ip.address()}:${port}`);
   });
 });
