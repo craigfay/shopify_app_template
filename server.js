@@ -5,6 +5,7 @@ const { SHOPIFY_API_SECRET_KEY, SHOPIFY_API_KEY, API_VERSION, TUNNEL_URL } = req
  * Dependencies
  */
 require('isomorphic-fetch');
+const ip = require('ip');
 const Koa = require('koa');
 const  bodyParser = require('koa-bodyparser');
 const next = require('next');

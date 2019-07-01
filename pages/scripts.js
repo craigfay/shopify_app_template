@@ -12,7 +12,7 @@ import {
   Link,
 } from '@shopify/polaris';
 
-import { TUNNEL_URL } from "../env.json";
+import * as ip from { ip };
 
 class ScriptPage extends React.Component {
 
@@ -75,7 +75,6 @@ class ScriptPage extends React.Component {
           >
             <p>View Script Tags that are enqueued in your online store.</p>
             { this.renderScriptsTable() }
-            {/* { this.state.script_tags.map((s, i) => <p key={i}>{JSON.stringify(s)}</p>) } */}
           </Card>
 
           <Card sectioned>
@@ -97,13 +96,13 @@ class ScriptPage extends React.Component {
     )
   }
   async addScript(event) {
-    const endpoint = `${TUNNEL_URL}/post-scripts`;
+    const endpoint = `/post-scripts`;
     const response = await fetch(endpoint);
     const json = await response.json();
     if (json) this.refreshScripts();
   }
   async deleteScript(id) {
-    const endpoint = `${TUNNEL_URL}/script_tags`;
+    const endpoint = `/script_tags`;
     const response = await fetch(endpoint, {
       method: 'DELETE',
       body: { id }
@@ -113,7 +112,7 @@ class ScriptPage extends React.Component {
     if (success) this.refreshScripts();
   }
   async refreshScripts() {
-    const endpoint = `${TUNNEL_URL}/get-scripts`;
+    const endpoint = `/get-scripts`;
     const response = await fetch(endpoint);
     const { script_tags } = await response.json();
     this.setState({ script_tags })
