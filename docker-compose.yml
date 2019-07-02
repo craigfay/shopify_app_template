@@ -3,12 +3,6 @@ version: "2.1"
 
 services:
 
-  npm_install:
-    build: ./
-    volumes:
-      - "./:/usr/src/app"
-    command: "npm install"
-
   shopify_app:
     build: ./
     volumes:
@@ -17,5 +11,5 @@ services:
     ports:
       - "3000:3000"
     command: "npm run dev"
-    environments:
-      - PORT: 3000
+    environment:
+      PORT: 3000
