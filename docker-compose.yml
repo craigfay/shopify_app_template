@@ -17,3 +17,5 @@ services:
     ports:
       - "3000:3000"
     command: "npm run dev"
+    environments:
+      - PORT: 3000
