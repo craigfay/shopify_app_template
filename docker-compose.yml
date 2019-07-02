@@ -2,11 +2,18 @@
 version: "2.1"
 
 services:
-  webserver:
+
+  npm_install:
     build: ./
     volumes:
       - "./:/usr/src/app"
-    container_name: node_app
+    command: "npm install"
+
+  shopify_app:
+    build: ./
+    volumes:
+      - "./:/usr/src/app"
+    container_name: shopify_app 
     ports:
       - "3000:3000"
-    command: "node -e \"setInterval( () => {}, 60000 )\""
+    command: "npm run dev"
